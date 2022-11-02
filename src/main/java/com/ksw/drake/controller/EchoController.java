@@ -16,8 +16,12 @@ public class EchoController {
         ResponseMessageVO resVO = new ResponseMessageVO();
         UserRequestVO userRequest = vo.getUserRequest();
         String utterance = userRequest.getUtterance();
+        DataVO data = new DataVO();
 
         String str = "echo: " + utterance;
+
+        data.setMsg(str);
+        resVO.setData(data);
 
         SimpleTextVO simpleText = new SimpleTextVO();
         simpleText.setText(str);
