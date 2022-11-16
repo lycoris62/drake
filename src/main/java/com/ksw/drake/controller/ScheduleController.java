@@ -1,13 +1,12 @@
 package com.ksw.drake.controller;
 
-import com.ksw.drake.dto.ScheduleDTO;
 import com.ksw.drake.service.ScheduleService;
-import org.springframework.stereotype.Controller;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
 
 @RestController
 public class ScheduleController {
@@ -19,11 +18,23 @@ public class ScheduleController {
     }
 
     @PostMapping("/api/schedule")
-    public ScheduleDTO save(@RequestParam String name) {
-        ScheduleDTO schedule = new ScheduleDTO();
-        schedule.setScheduleName(name);
-        schedule.setMemberId("1");
-        schedule.setTargetDate(new Date());
-        return scheduleService.save(schedule);
+    public JSONObject save(@RequestBody JSONObject req) throws ParseException {
+        JSONObject returnedJSON =  scheduleService.save(req);
+
+        JSONObject jsonObject = new JSONObject();
+        JSONArray outputsArray = new JSONArray();
+        JSONObject outputsObject = new JSONObject();
+        JSONObject output = new JSONObject();
+        JSONObject text = new JSONObject();
+
+        jsonObject.put("version", "2.0");
+        text.put("text", "일정: " + returnedJSON.get("targetDate") + "\n내용: " + returnedJSON.get("scheduleName"));
+        output.put("simpleText", text);
+        outputsArray.add(output);
+        outputsObject.put("outputs", outputsArray);
+
+        jsonObject.put("template", outputsObject);
+
+        return jsonObject;
     }
 }

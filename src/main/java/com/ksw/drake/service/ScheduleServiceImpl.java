@@ -2,6 +2,8 @@ package com.ksw.drake.service;
 
 import com.ksw.drake.dto.ScheduleDTO;
 import com.ksw.drake.repository.ScheduleRepository;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import java.util.List;
 
@@ -14,8 +16,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public ScheduleDTO save(ScheduleDTO user) {
-        return scheduleRepository.save(user);
+    public JSONObject save(JSONObject req) throws ParseException {
+        return scheduleRepository.save(req);
     }
 
     @Override
