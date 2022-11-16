@@ -15,6 +15,7 @@ public class EchoController {
         JSONParser parser = new JSONParser();
         JSONObject reqJSON = (JSONObject) parser.parse(req);
         JSONObject UserRequest = (JSONObject) reqJSON.get("userRequest");
+        System.out.println(reqJSON);
 
         JSONObject jsonObject = new JSONObject();
         JSONArray outputsArray = new JSONArray();
