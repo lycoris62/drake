@@ -19,6 +19,7 @@ public class ScheduleController {
 
     @PostMapping("/api/schedule")
     public JSONObject save(@RequestBody JSONObject req) throws ParseException {
+        System.out.println("[req]: " + req);
         JSONObject returnedJSON =  scheduleService.save(req);
 
         JSONObject jsonObject = new JSONObject();

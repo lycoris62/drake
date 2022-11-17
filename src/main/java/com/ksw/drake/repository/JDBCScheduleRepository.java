@@ -27,7 +27,7 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         JSONObject action = (JSONObject) jsonObject.get("action");
         JSONObject params = (JSONObject) action.get("params");
         String scheduleName = (String) params.get("scheduleName");
-        String nowdate = (String) params.get("nowdate");
+        Date nowDate = (Date) params.get("nowdate");
         JSONObject user = (JSONObject) userRequest.get("user");
         String member_id = (String) user.get("id");
         String memberIdQuery = "Select member_id from \"Member\" where member_id = \'" + member_id + "\'";
@@ -40,11 +40,11 @@ public class JDBCScheduleRepository implements ScheduleRepository{
 //        String scheduleName = "name";
 //        Date nowDate = new Date();
         String query2 = "INSERT INTO public.\"Schedule\"(schedule_name, target_date, member_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query2, scheduleName, nowdate, member_id);
+        jdbcTemplate.update(query2, scheduleName, nowDate, member_id);
 
         JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("scheduleName", scheduleName);
-        jsonObject2.put("targetDate", nowdate);
+        jsonObject2.put("targetDate", nowDate);
         jsonObject2.put("memberId", member_id);
 
         return jsonObject2;
