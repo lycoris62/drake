@@ -27,7 +27,9 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         JSONObject action = (JSONObject) jsonObject.get("action");
         JSONObject params = (JSONObject) action.get("params");
         String scheduleName = (String) params.get("scheduleName");
-        Date nowDate = (Date) params.get("nowdate");
+        String date = (String) params.get("nowdate");
+        JSONObject dateJSON = (JSONObject) parser.parse(date);
+        Date nowDate = (Date) dateJSON.get("date");
         JSONObject user = (JSONObject) userRequest.get("user");
         String member_id = (String) user.get("id");
         String memberIdQuery = "Select member_id from \"Member\" where member_id = \'" + member_id + "\'";
