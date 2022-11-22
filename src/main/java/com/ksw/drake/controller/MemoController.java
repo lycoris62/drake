@@ -29,7 +29,7 @@ public class MemoController {
         JSONObject text = new JSONObject();
 
         jsonObject.put("version", "2.0");
-        text.put("text", "제목: " + returnedJSON.get("title") + "\n내용: " + returnedJSON.get("content"));
+        text.put("text", "===== 메모 추가 완료 =====\n\n[제목]\n" + returnedJSON.get("title") + "\n\n[내용]\n" + returnedJSON.get("content"));
         output.put("simpleText", text);
         outputsArray.add(output);
         outputsObject.put("outputs", outputsArray);
