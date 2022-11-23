@@ -68,8 +68,8 @@ public class ScheduleServiceImpl implements ScheduleService{
         headerTitle.put("title", "일정 목록");
         header.put("header", headerTitle);
         listCard.put("listCard", header);
-        items.put("items", itemsArray);
-        header.put("items", items);
+//        items.put("items", itemsArray);
+        header.put("items", itemsArray);
         item1.put("title", "title1");
         item1.put("descriptions", "desc1");
         item2.put("title", "title2");
