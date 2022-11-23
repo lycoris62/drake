@@ -46,7 +46,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         ScheduleDTO scheduleDTO = new ScheduleDTO(
                 (String) returnedJSON.get("memberId"),
-                (LocalDateTime) returnedJSON.get("LocalDataTime"),
+                (LocalDateTime) returnedJSON.get("localDataTime"),
                 (String) returnedJSON.get("scheduleName"));
         sendScheduleToElastic(scheduleDTO);
 
