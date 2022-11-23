@@ -52,7 +52,7 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         String query2 = "INSERT INTO public.\"Schedule\"(schedule_name, target_date, member_id) VALUES (?, ?, ?)";
         jdbcTemplate.update(query2, scheduleName, localDateTime, member_id);
 
-        String localDateTimeString = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
+        String localDateTimeString = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
         ScheduleDTO scheduleDTO = new ScheduleDTO(member_id, localDateTime, localDateTimeString, scheduleName);
 
         return scheduleDTO;
