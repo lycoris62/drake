@@ -5,9 +5,6 @@ public class MemoDTO {
     private String title;
     private String content;
 
-    public MemoDTO() {
-    }
-
     public MemoDTO(String memberId, String title, String content) {
         this.memberId = memberId;
         this.title = title;
@@ -36,5 +33,14 @@ public class MemoDTO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "MemoDTO{" +
+                "memberId='" + memberId + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                '}';
     }
 }

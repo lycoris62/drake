@@ -5,11 +5,21 @@ import com.ksw.drake.repository.ScheduleRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ScheduleServiceImpl implements ScheduleService{
 
+    @Value("${elasticsearch.url}")
+    private String ELASTIC_URL;
     private ScheduleRepository scheduleRepository;
 
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
@@ -34,6 +44,12 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         jsonObject.put("template", outputsObject);
 
+        ScheduleDTO scheduleDTO = new ScheduleDTO(
+                (String) returnedJSON.get("memberId"),
+                (LocalDateTime) returnedJSON.get("LocalDataTime"),
+                (String) returnedJSON.get("scheduleName"));
+        sendScheduleToElastic(scheduleDTO);
+
         return jsonObject;
     }
 
@@ -45,5 +61,25 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public List<ScheduleDTO> findAll() {
         return null;
+    }
+
+    public void sendScheduleToElastic(ScheduleDTO scheduleDTO) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(ELASTIC_URL)
+                .path("/elastic")
+                .encode()
+                .build()
+                .toUri();
+
+        System.out.println("uri = " + uri + ", data = " + scheduleDTO.toString());
+
+        RequestEntity<ScheduleDTO> requestEntity = RequestEntity
+                .post(uri)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(scheduleDTO);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
+        System.out.println("response = " + response);
     }
 }

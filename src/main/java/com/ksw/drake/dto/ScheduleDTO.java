@@ -1,19 +1,16 @@
 package com.ksw.drake.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class ScheduleDTO {
-    private Long id;
-    private String  memberId;
-    private Date targetDate;
-    private String  scheduleName;
+    private String memberId;
+    private LocalDateTime targetDate;
+    private String scheduleName;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public ScheduleDTO(String memberId, LocalDateTime targetDate, String scheduleName) {
+        this.memberId = memberId;
+        this.targetDate = targetDate;
+        this.scheduleName = scheduleName;
     }
 
     public String getMemberId() {
@@ -24,11 +21,11 @@ public class ScheduleDTO {
         this.memberId = memberId;
     }
 
-    public Date getTargetDate() {
+    public LocalDateTime getTargetDate() {
         return targetDate;
     }
 
-    public void setTargetDate(Date targetDate) {
+    public void setTargetDate(LocalDateTime targetDate) {
         this.targetDate = targetDate;
     }
 
@@ -38,5 +35,14 @@ public class ScheduleDTO {
 
     public void setScheduleName(String scheduleName) {
         this.scheduleName = scheduleName;
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduleDTO{" +
+                "memberId='" + memberId + '\'' +
+                ", targetDate=" + targetDate +
+                ", scheduleName='" + scheduleName + '\'' +
+                '}';
     }
 }

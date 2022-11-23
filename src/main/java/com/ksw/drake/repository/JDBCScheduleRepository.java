@@ -56,6 +56,7 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("scheduleName", scheduleName);
         jsonObject2.put("targetDate", localDateTimeString);
+        jsonObject2.put("localDateTime", localDateTime);
         jsonObject2.put("memberId", member_id);
 
         return jsonObject2;
