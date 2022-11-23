@@ -13,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -25,15 +24,15 @@ public class ScheduleServiceImpl implements ScheduleService{
         this.scheduleRepository = scheduleRepository;
     }
 
+    JSONObject jsonObject = new JSONObject();
+    JSONArray outputsArray = new JSONArray();
+    JSONObject outputsObject = new JSONObject();
+    JSONObject output = new JSONObject();
+    JSONObject text = new JSONObject();
+
     @Override
     public JSONObject save(JSONObject req) throws ParseException {
         ScheduleDTO scheduleDTO = scheduleRepository.save(req);
-
-        JSONObject jsonObject = new JSONObject();
-        JSONArray outputsArray = new JSONArray();
-        JSONObject outputsObject = new JSONObject();
-        JSONObject output = new JSONObject();
-        JSONObject text = new JSONObject();
 
         jsonObject.put("version", "2.0");
         text.put("text", "일정: " + scheduleDTO.getTargetDate() + "\n내용: " + scheduleDTO.getScheduleName());
@@ -54,8 +53,48 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public List<ScheduleDTO> findAll() {
-        return null;
+    public JSONObject findAll() {
+        JSONObject listCard = new JSONObject();
+        JSONObject header = new JSONObject();
+        JSONObject headerTitle = new JSONObject();
+        JSONArray itemsArray = new JSONArray();
+        JSONObject items = new JSONObject();
+        JSONObject item1 = new JSONObject();
+        JSONObject item2 = new JSONObject();
+        JSONObject item3 = new JSONObject();
+        JSONObject item4 = new JSONObject();
+        JSONObject item5 = new JSONObject();
+
+        headerTitle.put("title", "일정 목록");
+        header.put("header", headerTitle);
+        listCard.put("listCard", header);
+        items.put("items", itemsArray);
+        header.put("items", items);
+        item1.put("title", "title1");
+        item1.put("descriptions", "desc1");
+        item2.put("title", "title2");
+        item2.put("description", "desc2");
+        item3.put("title", "title3");
+        item3.put("descriptions", "desc3");
+        item4.put("title", "title4");
+        item4.put("descriptions", "desc4");
+        item5.put("title", "title5");
+        item5.put("descriptions", "desc5");
+        itemsArray.add(item1);
+        itemsArray.add(item2);
+        itemsArray.add(item3);
+        itemsArray.add(item4);
+        itemsArray.add(item5);
+
+        jsonObject.put("version", "2.0");
+        output.put("simpleText", text);
+
+        outputsArray.add(listCard);
+        outputsObject.put("outputs", outputsArray);
+
+        jsonObject.put("template", outputsObject);
+
+        return jsonObject;
     }
 
     public void sendScheduleToElastic(ScheduleDTO scheduleDTO) {

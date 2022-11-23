@@ -16,9 +16,14 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @PostMapping("/api/schedule")
-    public JSONObject save(@RequestBody JSONObject req) throws ParseException {
+    @PostMapping("/api/schedule/create")
+    public JSONObject create(@RequestBody JSONObject req) throws ParseException {
         System.out.println("[req]: " + req);
         return scheduleService.save(req);
+    }
+    @PostMapping("/api/schedule/read")
+    public JSONObject read(@RequestBody JSONObject req) throws ParseException {
+        System.out.println("[req]: " + req);
+        return scheduleService.findAll();
     }
 }
