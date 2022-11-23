@@ -4,11 +4,13 @@ import java.time.LocalDateTime;
 
 public class ScheduleDTO {
     private String memberId;
-    private LocalDateTime targetDate;
+    private LocalDateTime localDateTime;
+    private String targetDate;
     private String scheduleName;
 
-    public ScheduleDTO(String memberId, LocalDateTime targetDate, String scheduleName) {
+    public ScheduleDTO(String memberId, LocalDateTime localDateTime, String targetDate, String scheduleName) {
         this.memberId = memberId;
+        this.localDateTime = localDateTime;
         this.targetDate = targetDate;
         this.scheduleName = scheduleName;
     }
@@ -21,11 +23,19 @@ public class ScheduleDTO {
         this.memberId = memberId;
     }
 
-    public LocalDateTime getTargetDate() {
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
+    public String getTargetDate() {
         return targetDate;
     }
 
-    public void setTargetDate(LocalDateTime targetDate) {
+    public void setTargetDate(String targetDate) {
         this.targetDate = targetDate;
     }
 
@@ -41,7 +51,8 @@ public class ScheduleDTO {
     public String toString() {
         return "ScheduleDTO{" +
                 "memberId='" + memberId + '\'' +
-                ", targetDate=" + targetDate +
+                ", localDateTime=" + localDateTime +
+                ", targetDate='" + targetDate + '\'' +
                 ", scheduleName='" + scheduleName + '\'' +
                 '}';
     }

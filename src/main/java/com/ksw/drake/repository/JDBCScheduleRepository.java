@@ -22,7 +22,7 @@ public class JDBCScheduleRepository implements ScheduleRepository{
     }
 
     @Override
-    public JSONObject save(JSONObject req) throws ParseException {
+    public ScheduleDTO save(JSONObject req) throws ParseException {
         JSONParser parser = new JSONParser();
         JSONObject jsonObject = (JSONObject) parser.parse(String.valueOf(req));
         JSONObject userRequest = (JSONObject) jsonObject.get("userRequest");
@@ -53,13 +53,9 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         jdbcTemplate.update(query2, scheduleName, localDateTime, member_id);
 
         String localDateTimeString = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
-        JSONObject jsonObject2 = new JSONObject();
-        jsonObject2.put("scheduleName", scheduleName);
-        jsonObject2.put("targetDate", localDateTimeString);
-        jsonObject2.put("localDateTime", localDateTime);
-        jsonObject2.put("memberId", member_id);
+        ScheduleDTO scheduleDTO = new ScheduleDTO(member_id, localDateTime, localDateTimeString, scheduleName);
 
-        return jsonObject2;
+        return scheduleDTO;
     }
 
     @Override

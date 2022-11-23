@@ -13,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class ScheduleServiceImpl implements ScheduleService{
@@ -28,7 +27,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 
     @Override
     public JSONObject save(JSONObject req) throws ParseException {
-        JSONObject returnedJSON = scheduleRepository.save(req);
+        ScheduleDTO scheduleDTO = scheduleRepository.save(req);
 
         JSONObject jsonObject = new JSONObject();
         JSONArray outputsArray = new JSONArray();
@@ -37,17 +36,13 @@ public class ScheduleServiceImpl implements ScheduleService{
         JSONObject text = new JSONObject();
 
         jsonObject.put("version", "2.0");
-        text.put("text", "일정: " + returnedJSON.get("targetDate") + "\n내용: " + returnedJSON.get("scheduleName"));
+        text.put("text", "일정: " + scheduleDTO.getTargetDate() + "\n내용: " + scheduleDTO.getScheduleName());
         output.put("simpleText", text);
         outputsArray.add(output);
         outputsObject.put("outputs", outputsArray);
 
         jsonObject.put("template", outputsObject);
 
-        ScheduleDTO scheduleDTO = new ScheduleDTO(
-                (String) returnedJSON.get("memberId"),
-                (LocalDateTime) returnedJSON.get("localDataTime"),
-                (String) returnedJSON.get("scheduleName"));
         sendScheduleToElastic(scheduleDTO);
 
         return jsonObject;

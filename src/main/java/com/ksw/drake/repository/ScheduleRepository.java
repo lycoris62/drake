@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ScheduleRepository {
 
-    public JSONObject save(JSONObject req) throws ParseException;
+    public ScheduleDTO save(JSONObject req) throws ParseException;
 
     public ScheduleDTO findById(Long id);
 
