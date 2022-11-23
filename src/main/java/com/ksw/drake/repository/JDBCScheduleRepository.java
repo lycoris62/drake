@@ -8,15 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-
-//DateUtil.java
-
-
+import java.util.stream.Stream;
 
 public class JDBCScheduleRepository implements ScheduleRepository{
 
@@ -36,20 +31,13 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         String scheduleName = (String) params.get("scheduleName");
         String date = (String) params.get("sys_date_time");
         JSONObject dateJSON = (JSONObject) parser.parse(date);
+
         System.out.println(dateJSON);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String nowDate = (String) dateJSON.get("date");
+        int[] reqDateList = Stream.of(((String) dateJSON.get("date")).split("-")).mapToInt(Integer::parseInt).toArray();
+        int[] reqTimeList = Stream.of(((String) dateJSON.get("time")).split(":")).mapToInt(Integer::parseInt).toArray();
 
-
-        Date targetDate = getDate(
-                Integer.parseInt(nowDate.split("-")[0]),
-                Integer.parseInt(nowDate.split("-")[1]),
-                Integer.parseInt(nowDate.split("-")[2]));
-
-//        Date targetDate = dateFormat.format(nowDate);
-
-//        System.out.println("Date: "+dateFormat.format(nowDate));
+        LocalDateTime localDateTime = LocalDateTime.of(reqDateList[0], reqDateList[1], reqDateList[2], reqTimeList[0], reqTimeList[1], reqTimeList[2]);
 
         JSONObject user = (JSONObject) userRequest.get("user");
         String member_id = (String) user.get("id");
@@ -60,14 +48,14 @@ public class JDBCScheduleRepository implements ScheduleRepository{
             String query = "Insert into public.\"Member\"(member_id) values (?)";
             jdbcTemplate.update(query, member_id);
         }
-//        String scheduleName = "name";
-//        Date nowDate = new Date();
-        String query2 = "INSERT INTO public.\"Schedule\"(schedule_name, target_date, member_id) VALUES (?, ?, ?)";
-        jdbcTemplate.update(query2, scheduleName, targetDate, member_id);
 
+        String query2 = "INSERT INTO public.\"Schedule\"(schedule_name, target_date, member_id) VALUES (?, ?, ?)";
+        jdbcTemplate.update(query2, scheduleName, localDateTime, member_id);
+
+        String localDateTimeString = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
         JSONObject jsonObject2 = new JSONObject();
         jsonObject2.put("scheduleName", scheduleName);
-        jsonObject2.put("targetDate", targetDate);
+        jsonObject2.put("targetDate", localDateTimeString);
         jsonObject2.put("memberId", member_id);
 
         return jsonObject2;
@@ -81,11 +69,5 @@ public class JDBCScheduleRepository implements ScheduleRepository{
     @Override
     public List<ScheduleDTO> findAll() {
         return null;
-    }
-
-    public static Date getDate(int year, int month, int date) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, month - 1, date);
-        return new Date(cal.getTimeInMillis());
     }
 }
