@@ -1,11 +1,18 @@
 package com.ksw.drake.dto;
 
-import java.util.Date;
-
 public class MemoDTO {
     private String memberId;
     private String title;
     private String content;
+
+    public MemoDTO() {
+    }
+
+    public MemoDTO(String memberId, String title, String content) {
+        this.memberId = memberId;
+        this.title = title;
+        this.content = content;
+    }
 
     public String getMemberId() {
         return memberId;
