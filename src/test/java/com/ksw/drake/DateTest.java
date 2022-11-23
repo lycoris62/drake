@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 public class DateTest {
 
@@ -15,7 +16,9 @@ public class DateTest {
 //        LocalDateTime localDateTimeShort = LocalDateTime.of(localDate, localTime);
         LocalDateTime localDateTime = LocalDateTime.of(2023, 11, 23, 21,43,7);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("Asia/Seoul"));
+        String localDateTimePattern = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
         System.out.println("zonedDateTime = " + zonedDateTime);
+        System.out.println("localDateTimePattern = " + localDateTimePattern);
     }
 
 }
