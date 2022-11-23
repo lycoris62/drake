@@ -21,21 +21,21 @@ public class ScheduleController {
     public JSONObject save(@RequestBody JSONObject req) throws ParseException {
         System.out.println("[req]: " + req);
         JSONObject returnedJSON =  scheduleService.save(req);
+//
+//        JSONObject jsonObject = new JSONObject();
+//        JSONArray outputsArray = new JSONArray();
+//        JSONObject outputsObject = new JSONObject();
+//        JSONObject output = new JSONObject();
+//        JSONObject text = new JSONObject();
+//
+//        jsonObject.put("version", "2.0");
+//        text.put("text", "일정: " + returnedJSON.get("targetDate") + "\n내용: " + returnedJSON.get("scheduleName"));
+//        output.put("simpleText", text);
+//        outputsArray.add(output);
+//        outputsObject.put("outputs", outputsArray);
+//
+//        jsonObject.put("template", outputsObject);
 
-        JSONObject jsonObject = new JSONObject();
-        JSONArray outputsArray = new JSONArray();
-        JSONObject outputsObject = new JSONObject();
-        JSONObject output = new JSONObject();
-        JSONObject text = new JSONObject();
-
-        jsonObject.put("version", "2.0");
-        text.put("text", "일정: " + returnedJSON.get("targetDate") + "\n내용: " + returnedJSON.get("scheduleName"));
-        output.put("simpleText", text);
-        outputsArray.add(output);
-        outputsObject.put("outputs", outputsArray);
-
-        jsonObject.put("template", outputsObject);
-
-        return jsonObject;
+        return returnedJSON;
     }
 }
