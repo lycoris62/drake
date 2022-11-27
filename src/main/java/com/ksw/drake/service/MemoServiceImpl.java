@@ -77,7 +77,7 @@ public class MemoServiceImpl implements MemoService {
             itemsArray.add(item);
         }
 
-        headerTitle.put("title", "일정 목록");
+        headerTitle.put("title", "메모 목록");
         header.put("header", headerTitle);
         listCard.put("listCard", header);
         header.put("items", itemsArray);
