@@ -84,9 +84,9 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         List<ScheduleResponseDTO> scheduleList = new ArrayList<>();
 
         jdbcTemplate.query(scheduleListQuery, (rs, rowNum) -> {
-            System.out.println("rs.getDate(\"target_date\") = " + rs.getDate("target_date"));
+            System.out.println("rs.getTimestamp(\"target_date\") = " + rs.getTimestamp("target_date"));
 
-            LocalDateTime localDateTime = rs.getDate("target_date").toInstant().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
+            LocalDateTime localDateTime = rs.getTimestamp("target_date").toInstant().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
             String localDateTimeString = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
 
             ScheduleResponseDTO schedule = new ScheduleResponseDTO(localDateTimeString, rs.getString("schedule_name"));
