@@ -65,7 +65,8 @@ public class ScheduleServiceImpl implements ScheduleService{
 
         for (ScheduleResponseDTO schedule : scheduleList) {
             JSONObject item = new JSONObject();
-            item.put(schedule.getTargetDate(), schedule.getScheduleName());
+            item.put("title", schedule.getTargetDate());
+            item.put("description", schedule.getScheduleName());
             itemsArray.add(item);
         }
 
