@@ -1,6 +1,7 @@
 package com.ksw.drake.repository;
 
 import com.ksw.drake.dto.ScheduleDTO;
+import com.ksw.drake.dto.ScheduleResponseDTO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -8,7 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Stream;
@@ -64,7 +67,33 @@ public class JDBCScheduleRepository implements ScheduleRepository{
     }
 
     @Override
-    public List<ScheduleDTO> findAll() {
-        return null;
+    public List<ScheduleResponseDTO> findAll(JSONObject req) throws ParseException, SQLException {
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) parser.parse(String.valueOf(req));
+        JSONObject userRequest = (JSONObject) jsonObject.get("userRequest");
+        JSONObject user = (JSONObject) userRequest.get("user");
+        String member_id = (String) user.get("id");
+
+        String memberIdQuery = "Select member_id from \"Member\" where member_id = \'" + member_id + "\'";
+        String memberId = String.valueOf(jdbcTemplate.query(memberIdQuery, (rs, rowNum) -> rs).get(0));
+
+        String scheduleListQuery = "SELECT schedule_id, schedule_name, target_date, member_id from public.\"Schedule\" \n" +
+                "WHERE member_id = '" + memberId + "'\n" +
+                "ORDER BY target_date DESC\n" +
+                "LIMIT 5;";
+
+        List<ResultSet> scheduleQueryList = jdbcTemplate.query(scheduleListQuery, (rs, rowNum) -> rs);
+        List<ScheduleResponseDTO> scheduleList = null;
+        for (ResultSet rs : scheduleQueryList) {
+            LocalDateTime localDateTime = rs.getDate("target_date")
+                    .toInstant().atZone(ZoneId.of("Asia/Seoul"))
+                    .toLocalDateTime();
+            String localDateTimeString = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
+            ScheduleResponseDTO schedule = new ScheduleResponseDTO(
+                    localDateTimeString,
+                    rs.getString("schedule_name"));
+            scheduleList.add(schedule);
+        }
+        return scheduleList;
     }
 }

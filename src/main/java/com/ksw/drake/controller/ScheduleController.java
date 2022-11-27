@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
+
 @RestController
 public class ScheduleController {
 
@@ -22,8 +24,8 @@ public class ScheduleController {
         return scheduleService.save(req);
     }
     @PostMapping("/api/schedule/read")
-    public JSONObject read(@RequestBody JSONObject req) throws ParseException {
+    public JSONObject read(@RequestBody JSONObject req) throws ParseException, SQLException {
         System.out.println("[req]: " + req);
-        return scheduleService.findAll();
+        return scheduleService.findAll(req);
     }
 }

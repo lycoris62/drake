@@ -1,6 +1,7 @@
 package com.ksw.drake.service;
 
 import com.ksw.drake.dto.ScheduleDTO;
+import com.ksw.drake.dto.ScheduleResponseDTO;
 import com.ksw.drake.repository.ScheduleRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.sql.SQLException;
+import java.util.List;
 
 public class ScheduleServiceImpl implements ScheduleService{
 
@@ -53,36 +56,23 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
-    public JSONObject findAll() {
+    public JSONObject findAll(JSONObject req) throws SQLException, ParseException {
+        List<ScheduleResponseDTO> scheduleList = scheduleRepository.findAll(req);
         JSONObject listCard = new JSONObject();
         JSONObject header = new JSONObject();
         JSONObject headerTitle = new JSONObject();
         JSONArray itemsArray = new JSONArray();
-        JSONObject item1 = new JSONObject();
-        JSONObject item2 = new JSONObject();
-        JSONObject item3 = new JSONObject();
-        JSONObject item4 = new JSONObject();
-        JSONObject item5 = new JSONObject();
 
         headerTitle.put("title", "일정 목록");
         header.put("header", headerTitle);
         listCard.put("listCard", header);
+
+        for (ScheduleResponseDTO schedule : scheduleList) {
+            JSONObject item = new JSONObject();
+            item.put(schedule.getTargetDate(), schedule.getScheduleName());
+            itemsArray.add(item);
+        }
         header.put("items", itemsArray);
-        item1.put("title", "title1");
-        item1.put("description", "desc1");
-        item2.put("title", "title2");
-        item2.put("description", "desc2");
-        item3.put("title", "title3");
-        item3.put("description", "desc3");
-        item4.put("title", "title4");
-        item4.put("description", "desc4");
-        item5.put("title", "title5");
-        item5.put("description", "desc5");
-        itemsArray.add(item1);
-        itemsArray.add(item2);
-        itemsArray.add(item3);
-        itemsArray.add(item4);
-        itemsArray.add(item5);
 
         jsonObject.put("version", "2.0");
         output.put("simpleText", text);
@@ -91,6 +81,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         outputsObject.put("outputs", outputsArray);
 
         jsonObject.put("template", outputsObject);
+        System.out.println("jsonObject = " + jsonObject);
 
         return jsonObject;
     }
