@@ -74,12 +74,10 @@ public class JDBCScheduleRepository implements ScheduleRepository{
         JSONObject userRequest = (JSONObject) jsonObject.get("userRequest");
         JSONObject user = (JSONObject) userRequest.get("user");
         String member_id = (String) user.get("id");
+        System.out.println("member_id = " + member_id);
 
-        String memberIdQuery = "Select member_id from \"Member\" where member_id = \'" + member_id + "\'";
-        String memberId = String.valueOf(jdbcTemplate.query(memberIdQuery, (rs, rowNum) -> rs).get(0));
-        System.out.println("memberId = " + memberId);
         String scheduleListQuery = "SELECT schedule_id, schedule_name, target_date, member_id from public.\"Schedule\" \n" +
-                "WHERE member_id = '" + memberId + "'\n" +
+                "WHERE member_id = '" + member_id + "'\n" +
                 "ORDER BY target_date DESC\n" +
                 "LIMIT 5;";
 
