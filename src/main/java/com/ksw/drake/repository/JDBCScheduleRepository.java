@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -83,7 +84,7 @@ public class JDBCScheduleRepository implements ScheduleRepository{
                 "LIMIT 5;";
 
         List<ResultSet> scheduleQueryList = jdbcTemplate.query(scheduleListQuery, (rs, rowNum) -> rs);
-        List<ScheduleResponseDTO> scheduleList = null;
+        List<ScheduleResponseDTO> scheduleList = new ArrayList<>();
         for (ResultSet rs : scheduleQueryList) {
             LocalDateTime localDateTime = rs.getDate("target_date")
                     .toInstant().atZone(ZoneId.of("Asia/Seoul"))
