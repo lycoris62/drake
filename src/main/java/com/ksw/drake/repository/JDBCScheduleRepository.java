@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -81,20 +80,14 @@ public class JDBCScheduleRepository implements ScheduleRepository{
                 "ORDER BY target_date DESC\n" +
                 "LIMIT 5;";
 
-        List<ResultSet> scheduleQueryList = jdbcTemplate.query(scheduleListQuery, (rs, rowNum) -> rs);
-        System.out.println("scheduleQueryList = " + scheduleQueryList);
-
-        List<ScheduleResponseDTO> scheduleList = new ArrayList<>();
-        for (ResultSet rs : scheduleQueryList) {
-            LocalDateTime localDateTime = rs.getDate("target_date")
-                    .toInstant().atZone(ZoneId.of("Asia/Seoul"))
-                    .toLocalDateTime();
+        List<ScheduleResponseDTO> scheduleList = jdbcTemplate.query(scheduleListQuery, (rs, rowNum) -> {
+            LocalDateTime localDateTime = rs.getDate("target_date").toInstant().atZone(ZoneId.of("Asia/Seoul")).toLocalDateTime();
             String localDateTimeString = localDateTime.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
-            ScheduleResponseDTO schedule = new ScheduleResponseDTO(
-                    localDateTimeString,
-                    rs.getString("schedule_name"));
-            scheduleList.add(schedule);
-        }
+            ScheduleResponseDTO schedule = new ScheduleResponseDTO(localDateTimeString, rs.getString("schedule_name"));
+
+            return schedule;
+        });
+
         System.out.println("scheduleList = " + scheduleList);
 
         return scheduleList;
