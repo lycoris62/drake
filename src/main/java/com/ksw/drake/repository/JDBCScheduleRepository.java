@@ -77,13 +77,15 @@ public class JDBCScheduleRepository implements ScheduleRepository{
 
         String memberIdQuery = "Select member_id from \"Member\" where member_id = \'" + member_id + "\'";
         String memberId = String.valueOf(jdbcTemplate.query(memberIdQuery, (rs, rowNum) -> rs).get(0));
-
+        System.out.println("memberId = " + memberId);
         String scheduleListQuery = "SELECT schedule_id, schedule_name, target_date, member_id from public.\"Schedule\" \n" +
                 "WHERE member_id = '" + memberId + "'\n" +
                 "ORDER BY target_date DESC\n" +
                 "LIMIT 5;";
 
         List<ResultSet> scheduleQueryList = jdbcTemplate.query(scheduleListQuery, (rs, rowNum) -> rs);
+        System.out.println("scheduleQueryList = " + scheduleQueryList);
+
         List<ScheduleResponseDTO> scheduleList = new ArrayList<>();
         for (ResultSet rs : scheduleQueryList) {
             LocalDateTime localDateTime = rs.getDate("target_date")
@@ -95,6 +97,8 @@ public class JDBCScheduleRepository implements ScheduleRepository{
                     rs.getString("schedule_name"));
             scheduleList.add(schedule);
         }
+        System.out.println("scheduleList = " + scheduleList);
+
         return scheduleList;
     }
 }

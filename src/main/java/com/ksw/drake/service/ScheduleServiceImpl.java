@@ -63,15 +63,15 @@ public class ScheduleServiceImpl implements ScheduleService{
         JSONObject headerTitle = new JSONObject();
         JSONArray itemsArray = new JSONArray();
 
-        headerTitle.put("title", "일정 목록");
-        header.put("header", headerTitle);
-        listCard.put("listCard", header);
-
         for (ScheduleResponseDTO schedule : scheduleList) {
             JSONObject item = new JSONObject();
             item.put(schedule.getTargetDate(), schedule.getScheduleName());
             itemsArray.add(item);
         }
+
+        headerTitle.put("title", "일정 목록");
+        header.put("header", headerTitle);
+        listCard.put("listCard", header);
         header.put("items", itemsArray);
 
         jsonObject.put("version", "2.0");
