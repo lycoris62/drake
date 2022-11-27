@@ -11,5 +11,5 @@ public interface MemoRepository {
 
     public MemoDTO findById(Long id);
 
-    public List<MemoDTO> findAll();
+    public List<MemoDTO> findAll(JSONObject req) throws ParseException;
 }

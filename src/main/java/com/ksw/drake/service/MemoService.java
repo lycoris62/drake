@@ -12,5 +12,5 @@ public interface MemoService {
 
     public MemoDTO findById(Long id);
 
-    public List<MemoDTO> findAll();
+    public JSONObject findAll(JSONObject rq) throws ParseException;
 }

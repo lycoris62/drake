@@ -5,6 +5,11 @@ public class MemoDTO {
     private String title;
     private String content;
 
+    public MemoDTO(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     public MemoDTO(String memberId, String title, String content) {
         this.memberId = memberId;
         this.title = title;

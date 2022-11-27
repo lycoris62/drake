@@ -1,7 +1,6 @@
 package com.ksw.drake.repository;
 
 import com.ksw.drake.dto.MemoDTO;
-import com.ksw.drake.dto.ScheduleDTO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -9,8 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCMemoRepository implements MemoRepository{
@@ -57,7 +55,30 @@ public class JDBCMemoRepository implements MemoRepository{
     }
 
     @Override
-    public List<MemoDTO> findAll() {
-        return null;
+    public List<MemoDTO> findAll(JSONObject req) throws ParseException {
+        JSONParser parser2 = new JSONParser();
+        JSONObject jsonObject = (JSONObject) parser2.parse(String.valueOf(req));
+        JSONObject userRequest = (JSONObject) jsonObject.get("userRequest");
+        JSONObject user = (JSONObject) userRequest.get("user");
+        String member_id = (String) user.get("id");
+        System.out.println("member_id = " + member_id);
+
+        String memoListQuery = "SELECT memo_title, memo_content from public.\"Memo\" \n" +
+                "WHERE member_id = '" + member_id + "'\n" +
+                "ORDER BY memo_id DESC\n" +
+                "LIMIT 5;";
+
+        List<MemoDTO> memoList = new ArrayList<>();
+
+        jdbcTemplate.query(memoListQuery, (rs, rowNum) -> {
+            MemoDTO memo = new MemoDTO(rs.getString("memo_title"), rs.getString("memo_content"));
+            memoList.add(memo);
+
+            return rs;
+        });
+
+        System.out.println("memoList = " + memoList);
+
+        return memoList;
     }
 }

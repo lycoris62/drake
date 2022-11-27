@@ -1,6 +1,7 @@
 package com.ksw.drake.service;
 
 import com.ksw.drake.dto.MemoDTO;
+import com.ksw.drake.dto.ScheduleResponseDTO;
 import com.ksw.drake.repository.MemoRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -15,6 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+import static java.awt.SystemColor.text;
+
 public class MemoServiceImpl implements MemoService {
     @Value("${elasticsearch.url}")
     private String ELASTIC_URL;
@@ -23,6 +26,12 @@ public class MemoServiceImpl implements MemoService {
     public MemoServiceImpl(MemoRepository memoRepository) {
         this.memoRepository = memoRepository;
     }
+
+    JSONObject jsonObject = new JSONObject();
+    JSONArray outputsArray = new JSONArray();
+    JSONObject outputsObject = new JSONObject();
+    JSONObject output = new JSONObject();
+    JSONObject text = new JSONObject();
 
     @Override
     public JSONObject save(JSONObject req) throws ParseException {
@@ -54,8 +63,35 @@ public class MemoServiceImpl implements MemoService {
     }
 
     @Override
-    public List<MemoDTO> findAll() {
-        return null;
+    public JSONObject findAll(JSONObject req) throws ParseException {
+        List<MemoDTO> memoList = memoRepository.findAll(req);
+        JSONObject listCard = new JSONObject();
+        JSONObject header = new JSONObject();
+        JSONObject headerTitle = new JSONObject();
+        JSONArray itemsArray = new JSONArray();
+
+        for (MemoDTO memo : memoList) {
+            JSONObject item = new JSONObject();
+            item.put("title", memo.getTitle());
+            item.put("description", memo.getContent());
+            itemsArray.add(item);
+        }
+
+        headerTitle.put("title", "일정 목록");
+        header.put("header", headerTitle);
+        listCard.put("listCard", header);
+        header.put("items", itemsArray);
+
+        jsonObject.put("version", "2.0");
+        output.put("simpleText", text);
+
+        outputsArray.add(listCard);
+        outputsObject.put("outputs", outputsArray);
+
+        jsonObject.put("template", outputsObject);
+        System.out.println("jsonObject = " + jsonObject);
+
+        return jsonObject;
     }
 
     public void sendMemoToElastic(MemoDTO memoDTO) {
